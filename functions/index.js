@@ -6,9 +6,9 @@ admin.initializeApp();
 admin.firestore().settings({ timestampsInSnapshots: true });
 
 /**
- * Saves the file name and file path in the Firestore Database.
+ * Adds the file data in the Firestore Database.
  *
- * @event file upload to Firebase Storage.
+ * @event file uploaded to Firebase Storage.
  * @type {CloudFunction<ObjectMetadata>}
  */
 exports.addFileToDatabase = functions.storage.object().onFinalize(async (object) => {
@@ -23,4 +23,22 @@ exports.addFileToDatabase = functions.storage.object().onFinalize(async (object)
         size: fileSize,
         timestamp: timestamp
     });
+
+    console.log(`File '${filePath}' added in the database.`);
+});
+
+/**
+ * Deletes a file data from the Firestore Database.
+ *
+ * @event file deleted from Firebase Storage.
+ * @type {CloudFunction<ObjectMetadata>}
+ */
+exports.removeFileFromDatabase = functions.storage.object().onDelete(async (object) => {
+    const filePath = object.name;
+
+    admin.firestore().collection('files').where('path', '==', filePath).get()
+        .then(snapshot => snapshot.forEach(doc => doc.ref.delete()))
+        .catch(err => console.error('Error getting document', err));
+
+    console.log(`File '${filePath}' deleted from the database.`);
 });

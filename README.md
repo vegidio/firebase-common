@@ -15,6 +15,7 @@ The project can be controlled through the [Firebase's](https://console.firebase.
 ### Functions
 
 * __addFileToDatabase:__ When a file is uploaded in the Storage its reference will automatically be added in the Firestore database.
+* __removeFileFromDatabase:__ When a file is deleted from the Storage its reference will automatically be removed from the Firestore database.
 
 ## Deployment
 
